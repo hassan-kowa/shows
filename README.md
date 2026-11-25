@@ -128,6 +128,11 @@ tests/              Test suite
 .github/workflows/  CI workflow
 ```
 
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup,
+testing and pull request guidelines.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
