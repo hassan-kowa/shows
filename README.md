@@ -84,6 +84,17 @@ To filter the log for errors, use [`jq`](https://jqlang.github.io/jq/):
 jq 'select(.level=="error")' logs/app.log
 ```
 
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests build a small temporary `shows.db`, so they don't need the real
+database. They run automatically on every push and pull request through GitHub
+Actions (`.github/workflows/tests.yml`) on Python 3.11, 3.12 and 3.13.
+
 ## Project layout
 
 ```
@@ -92,6 +103,9 @@ logging_config.py   structlog setup (JSON file + console)
 wsgi.py             Minimal hello-world app (not used by app.py)
 templates/          HTML templates
 requirements.txt    Python dependencies
+requirements-dev.txt  Test dependencies (pytest)
+tests/              Test suite
+.github/workflows/  CI workflow
 ```
 
 ## License
