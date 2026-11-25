@@ -1,4 +1,5 @@
 # Shows
+[![Tests](https://github.com/hassan-kowa/shows/actions/workflows/tests.yml/badge.svg)](https://github.com/hassan-kowa/shows/actions/workflows/tests.yml)
 
 A small Flask app that searches a database of TV shows by title. Requests and
 errors are logged as structured JSON using [structlog](https://www.structlog.org/).
