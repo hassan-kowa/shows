@@ -93,3 +93,7 @@ wsgi.py             Minimal hello-world app (not used by app.py)
 templates/          HTML templates
 requirements.txt    Python dependencies
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
