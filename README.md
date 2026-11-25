@@ -21,6 +21,23 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+### Updating dependencies
+
+`requirements.in` and `requirements-dev.in` list the direct dependencies.
+`requirements.txt` and `requirements-dev.txt` are lock files generated from them
+with [pip-tools](https://pip-tools.readthedocs.io/), so every install gets the
+same versions. Do not edit the `.txt` files by hand. To change a dependency,
+edit the `.in` file and regenerate:
+
+```bash
+pip install pip-tools
+pip-compile --strip-extras --no-emit-index-url requirements.in
+pip-compile --strip-extras --no-emit-index-url requirements-dev.in
+```
+
+Run the first command before the second, since the dev file is constrained by
+the first lock file.
+
 ## Database
 
 `shows.db` is **not** included in this repository (it is large). Place your own
@@ -103,8 +120,10 @@ app.py              Flask app and routes
 logging_config.py   structlog setup (JSON file + console)
 wsgi.py             Minimal hello-world app (not used by app.py)
 templates/          HTML templates
-requirements.txt    Python dependencies
-requirements-dev.txt  Test dependencies (pytest)
+requirements.in     Direct dependencies (edit this)
+requirements.txt    Locked dependencies (generated)
+requirements-dev.in Direct test dependencies (edit this)
+requirements-dev.txt  Locked test dependencies (generated)
 tests/              Test suite
 .github/workflows/  CI workflow
 ```
