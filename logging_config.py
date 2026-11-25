@@ -1,4 +1,5 @@
 import logging
+import re
 import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -7,6 +8,27 @@ import structlog
 
 LOG_DIR = Path(__file__).parent / "logs"
 LOG_FILE = LOG_DIR / "app.log"
+
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")
+
+
+class _WerkzeugFilter(logging.Filter):
+    """Quiet werkzeug, but keep the line that says where the server is running.
+
+    werkzeug's per-request access lines duplicate our own request logging and
+    contain ANSI color codes, so drop them. The startup line ("Running on
+    http://...") is the only way to see which address to open, so let it
+    through with the color codes removed. Warnings and errors always pass.
+    """
+
+    def filter(self, record):
+        if record.levelno >= logging.WARNING:
+            return True
+        message = _ANSI.sub("", record.getMessage())
+        if "Running on" in message:
+            record.msg, record.args = message, ()
+            return True
+        return False
 
 
 def setup_logging(level=logging.INFO):
@@ -64,6 +86,6 @@ def setup_logging(level=logging.INFO):
     root.addHandler(console_handler)
     root.setLevel(level)
 
-    # werkzeug's access log duplicates our own request logging and contains
-    # ANSI color codes, so only let warnings and errors through.
-    logging.getLogger("werkzeug").setLevel(logging.WARNING)
+    werkzeug_logger = logging.getLogger("werkzeug")
+    werkzeug_logger.setLevel(logging.INFO)
+    werkzeug_logger.addFilter(_WerkzeugFilter())
